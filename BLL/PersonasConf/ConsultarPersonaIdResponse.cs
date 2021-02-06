@@ -5,22 +5,22 @@ using System.Text;
 
 namespace BLL.PersonasConf
 {
-    public class ConsultarPersonaResponse
+    public class ConsultarPersonaIdResponse
     {
-        public List<Persona> Personas { get; set; }
+        public Persona _Persona { get; set; }
         public bool Error { get; set; }
         public string Mensaje { get; set; }
 
-        public ConsultarPersonaResponse(List<Persona> personas)
+        public ConsultarPersonaIdResponse(Persona persona)
         {
-            Personas = personas;
             Error = false;
+            _Persona = persona;
         }
 
-        public ConsultarPersonaResponse(string mensaje)
+        public ConsultarPersonaIdResponse(string mensaje)
         {
-            Mensaje = mensaje;
             Error = true;
+            Mensaje = mensaje;
         }
     }
 }

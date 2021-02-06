@@ -8,6 +8,7 @@ using Entity;
 using PulsacionesApi.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Cors;
+using DAL;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -21,9 +22,9 @@ namespace PulsacionesApi.Controllers
 
         private readonly PersonaService personaService;
 
-        public PersonaController()
+        public PersonaController(PulsacionesContext context)
         {
-            personaService = new PersonaService();
+            personaService = new PersonaService(context);
         }
         // GET: api/<ValuesController>
         [HttpGet]
@@ -35,17 +36,29 @@ namespace PulsacionesApi.Controllers
 
             return response.Personas;
         }
+     
 
         // GET api/<ValuesController>/5
         [HttpGet("{id}")]
-        public string Get(int id)
+        public ActionResult<Persona> Get(string id)
         {
-            return "value";
+            var response = personaService.ConsultarPersona(id);
+            if (response.Error)
+            {
+                ModelState.AddModelError("Consultar Persona", response.Mensaje);
+                var problemDetails = new ValidationProblemDetails(ModelState)
+                {
+                    Status = StatusCodes.Status400BadRequest,
+                };
+                return BadRequest(problemDetails);
+            }
+            return Ok(response._Persona);
+            
         }
 
         // POST api/<ValuesController>
         [HttpPost]
-        public ActionResult<PersonaViewModel> Post(PersonaInputModel personaInput)
+        public ActionResult<Persona> Post(PersonaInputModel personaInput)
         {
             Persona persona = MapearPersona(personaInput);
             var response = personaService.Guardar(persona);
@@ -61,6 +74,8 @@ namespace PulsacionesApi.Controllers
             return Ok(response.Persona);
         }
 
+       
+      
         private Persona MapearPersona(PersonaInputModel personaInput)
         {
             var persona = new Persona

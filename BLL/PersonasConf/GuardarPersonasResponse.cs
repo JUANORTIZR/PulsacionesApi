@@ -5,19 +5,19 @@ using System.Text;
 
 namespace BLL.PersonasConf
 {
-    public class GuardarPersonaResponse
+    public class GuardarPersonasResponse
     {
         public Persona Persona { get; set; }
         public string Mensaje { get; set; }
         public bool Error { get; set; }
 
-        public GuardarPersonaResponse(Persona persona)
+        public GuardarPersonasResponse(Persona persona)
         {
             Error = false;
             Persona = persona;
         }
 
-        public GuardarPersonaResponse(string mensaje)
+        public GuardarPersonasResponse(string mensaje)
         {
             Error = true;
             Mensaje = mensaje;

@@ -3,44 +3,66 @@ using Entity;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Linq;
 
 namespace BLL.PersonasConf
 {
     public class PersonaService
     {
 
-        private PersonasRepository personaRepository;
-        public PersonaService()
+        private readonly PulsacionesContext context;
+        public PersonaService(PulsacionesContext _context)
         {
-            personaRepository = new PersonasRepository();
+           context = _context;
         }
 
 
-        public GuardarPersonaResponse Guardar(Persona persona)
+        public GuardarPersonasResponse Guardar(Persona persona)
         {
             try
             {
+                var personaRegistrada = context.Personas.Find(persona.Identificacion);
+                if(personaRegistrada != null) return new GuardarPersonasResponse("La persona ya se encuentra resgistrada");
+
                 persona.CalcularPulsaciones();
-                personaRepository.Guardar(persona);
-                return new GuardarPersonaResponse(persona);
+                context.Personas.Add(persona);
+                context.SaveChanges();
+
+                return new GuardarPersonasResponse(persona);
             }
             catch (Exception e)
             {
-                return new GuardarPersonaResponse(e.Message);
+                return new GuardarPersonasResponse(e.Message);
             }
         }
 
-        public ConsultarPersonaResponse Consultar()
+        public ConsultarPersonasResponse Consultar()
         {
             try
             {
-                List<Persona> personas = personaRepository.Consultar();
-                return new ConsultarPersonaResponse(personas);
+                List<Persona> personas = context.Personas.ToList();
+                return new ConsultarPersonasResponse(personas);
             }
             catch (Exception e)
             {
-                return new ConsultarPersonaResponse(e.Message);
+                return new ConsultarPersonasResponse(e.Message);
             }
+        }
+
+        public ConsultarPersonaIdResponse ConsultarPersona(string id)
+        {
+           
+            Persona persona = context.Personas.Find(id);
+            if (persona == null) { 
+                return new ConsultarPersonaIdResponse($"No hay persona resgistrada con el id {id} en nuestra base de datos");
+            }
+            else
+            {
+                return new ConsultarPersonaIdResponse(persona);
+            }
+            
+         
+            
         }
     }
 }
