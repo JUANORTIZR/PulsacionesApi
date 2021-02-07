@@ -97,8 +97,9 @@ namespace PulsacionesApi.Controllers
 
         // DELETE api/<ValuesController>/5
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        public void Delete(string id)
         {
+            personaService.Eliminar(id);
         }
     }
 }

@@ -56,13 +56,20 @@ namespace BLL.PersonasConf
             if (persona == null) { 
                 return new ConsultarPersonaIdResponse($"No hay persona resgistrada con el id {id} en nuestra base de datos");
             }
-            else
-            {
-                return new ConsultarPersonaIdResponse(persona);
-            }
+            return new ConsultarPersonaIdResponse(persona);
             
-         
-            
+        }
+
+        public string Eliminar(string id)
+        {
+            Persona persona = context.Personas.Find(id);
+            if (persona.Equals(null)) return "La persona que intenta eliminar no se encuentra registrada";
+
+            context.Personas.Remove(persona);
+            context.SaveChanges();
+
+            return "Persona eliminada correctamente";
+
         }
     }
 }

@@ -32,8 +32,10 @@ namespace PulsacionesApi
             services.AddDbContext<PulsacionesContext>(p=>p.UseSqlServer(connectionString));
 
             services.AddCors(options => options.AddDefaultPolicy(
-                builder => { builder.AllowAnyOrigin();
+                builder => { 
+                    builder.AllowAnyOrigin();
                     builder.AllowAnyHeader();
+                    builder.AllowAnyMethod();
                 })
             );
            
